@@ -12,7 +12,8 @@ import java.util.Random;
  *
  */
 public class Shuffle {
-
+  private static final String NO_INPUT_MESSAGE = "No size specified; using";
+  private static final String BAD_INPUT_MESSAGE = "Could not parse \"%s\" as";
   //constant 
   private static final int DEFAULT_SIZE = 50;
   
@@ -24,17 +25,41 @@ public class Shuffle {
    * @param args command line arguments; first value is the array size default = 50
    */
   public static void main(String[] args) {
-    //Terinary 3 parts Boolean arg, value is the integer , DEFAULT_SIZE  result is put into size
-    int size = (args.length > 0) ? Integer.parseInt(args[0]) : DEFAULT_SIZE;
+    
+    int size = DEFAULT_SIZE;
+    try {
+      size = getSize(args);
+    }
+    catch (NumberFormatException ex) {
+      System.out.printf(BAD_INPUT_MESSAGE, args[0], DEFAULT_SIZE);
+    } catch (ArrayIndexOutOfBoundsException ex) {
+      System.out.printf(NO_INPUT_MESSAGE, DEFAULT_SIZE);
+    }
+
     int[] values = generate(size);
     //returns all of the array
     System.out.println(Arrays.toString(values));
     shuffle(values);
     System.out.println(Arrays.toString(values));
 
-    
-
   }
+  /*private static int getSize(String[] args) {
+    int size = DEFAULT_SIZE;
+    //try-catch clause is to handle exception; try is : (try) this is what I want to do BUT need to do another thing (catch).
+    try {
+      size = Integer.parseInt(args[0]);
+    } catch (NumberFormatException ex) {
+      System.out.printf("Could not parse \"%s\" as an int; using default value (%d).%n", args[0], DEFAULT_SIZE);
+    } catch (ArrayIndexOutOfBoundsException ex) {
+      System.out.printf("No size specified; using default value (%d).%n", DEFAULT_SIZE);
+    }
+    return size;
+  }*/
+  private static int getSize(String[] args) 
+   throws ArrayIndexOutOfBoundsException, NumberFormatException {
+    return Integer.parseInt(args[0]);
+  }
+  
   //create an array
   //new to create new object
   private static int[] generate(int size) {
